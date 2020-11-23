@@ -1,0 +1,22 @@
+body{
+	background-color: #EAEDF1;
+}
+.profile {	
+	background-color: white;
+	display: flex;
+	width: 435px;
+	height: 296px;
+}
+.profile_name{
+	font-family: Lato sans-serif;
+}
+
+.sign{
+	width: 109px;
+	height: 80px;
+	border: 2px solid red;	
+}
+
+.noSmokingSign{
+	border: 2px solid blue;
+}
