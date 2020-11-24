@@ -1,22 +1,167 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Signika&family=Signika+Negative&display=swap');
+
 body{
 	background-color: #EAEDF1;
+	margin: 0px;
+	padding: 80px;
+	width: 1511px;
 }
+
+h1{
+	color: #33495F;
+}
+
+p{
+	color: #33495F;
+}
+
+a{
+	color: #33495F;;
+}
+
+span{
+	color: #33495F;
+}
+
+.header{
+	display: flex;	
+}
+
 .profile {	
 	background-color: white;
 	display: flex;
 	width: 435px;
 	height: 296px;
+	flex-wrap: wrap;
+	margin-right: 90px;	
 }
-.profile_name{
-	font-family: Lato sans-serif;
+
+.profile_textBlock{
+	margin-left: 44px;
+	margin-top: 66px;	
+}
+
+.profile_textBlock h1{
+	font-family: Signica, sans-serif;
+	font-size: 27px;
+	margin-bottom: 6px;	
+}
+
+.profile_textBlock p{
+	font-family: Lato, sans-serif;
+	font-size: 17px;
+	margin-top: 0px;
+}
+
+.upperProfileBlock{
+	display: flex;
+}
+.lowerProfileBlock{
+	display: flex;
+
+}
+.avatar{
+	width: 149px;
+	height: 149px;
+	margin-top: 36px;
+	margin-left: 24px;
+	margin-bottom: 32px;
 }
 
 .sign{
 	width: 109px;
-	height: 80px;
-	border: 2px solid red;	
+	height: 78px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.sign span{
+	font-family: Lato, sans-serif;	
+	color: white;
+	text-transform: uppercase;
+	margin-bottom: 7px;
+}
+
+.ageSign{
+	background-color: #16C4EC;
+}
+
+.langSign{
+	background-color: #FA5351;
+}
+
+.driveLicSign{
+	background-color: #10CDC1;
 }
 
 .noSmokingSign{
-	border: 2px solid blue;
+	background-color: #33495F;
+}
+
+.currentEmployment{
+	background-color: white;
+	display: flex;	
+	width: 820px;
+	height: 293px;	
+}
+
+.currentEmployment_text{
+	position: relative;
+	top: 27px;
+	left: 29px;
+	width: 404px;
+}
+
+.currentEmployment_text h1{
+	font-family: Signica, sans-serif;
+	font-size: 34px;
+	margin-bottom: 13px;		
+}
+
+.currentEmployment_text p{
+	font-family: Lato, sans-serif;
+	font-size: 17px;
+	text-align: justify;
+	line-height: 30px;
+	margin-top: 0;
+	margin-bottom: 23px;	
+}
+
+.currentEmployment_text a{
+	text-decoration: none;
+	color: #3BD0F0;	
+}
+
+.socialLinks{	
+	display: flex;
+	justify-content: space-between;	
+	margin-left: -10px;
+	margin-right: 7px;
+}
+
+.currentEmployment_contacts{
+	display: flex;	
+	margin-left: 106px;
+	flex-direction: column;
+	justify-content: center;
+	font-size: 24px;
+	line-height: 45px;
+	margin-top: 17px;
+}
+
+.currentEmployment_contacts .email{
+	font-family: Lato, sans-serif;	
+}
+
+.currentEmployment_contacts .web{
+	font-family: Lato, sans-serif;	
+	color: #FA5351;
+}
+
+.currentEmployment_contacts .border{
+	border-bottom: 1px solid black;
+	line-height: 25px;
 }
