@@ -25,7 +25,8 @@ span{
 }
 
 .header{
-	display: flex;	
+	display: flex;
+	margin-bottom: 39px;	
 }
 
 .profile {	
@@ -164,4 +165,20 @@ span{
 .currentEmployment_contacts .border{
 	border-bottom: 1px solid black;
 	line-height: 25px;
+}
+
+.main{
+	display: flex;
+	align-content: center;
+}
+
+.leftColumn{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.leftColBlock{
+	width: 633px;
+	background-color: white;
 }
