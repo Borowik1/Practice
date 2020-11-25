@@ -87,19 +87,19 @@ span{
 }
 
 .ageSign{
-	background-color: #16C4EC;
+	background-color: #00C5EE;
 }
 
 .langSign{
-	background-color: #FA5351;
+	background-color: #FF5250;
 }
 
 .driveLicSign{
-	background-color: #10CDC1;
+	background-color: #00CEC2;
 }
 
 .noSmokingSign{
-	background-color: #33495F;
+	background-color: #214760;
 }
 
 .currentEmployment{
@@ -175,10 +175,301 @@ span{
 .leftColumn{
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	justify-content: flex-start;
 }
 
-.leftColBlock{
-	width: 633px;
+.columnBlock{	
+	width: 633px;	
 	background-color: white;
+	font-family: Lato, sans-serif;
+	border-radius: 4px;
+	margin-bottom: 31px;
+}
+
+.columnBlock .content1{
+	position: relative;
+	top: 13px;
+	left: 25px;
+	margin-bottom: 36px;	
+}
+
+.columnBlock .content2{
+	position: relative;
+	top: 13px;
+	left: 25px;
+	margin-bottom: 36px;	
+}
+
+.columnBlock .content3{
+	position: relative;
+	top: 13px;
+	left: 25px;
+	margin-bottom: 36px;	
+}
+
+.columnBlock .content4{
+	position: relative;
+	top: 13px;
+	left: 25px;
+	margin-bottom: 36px;	
+}
+
+.columnBlock h1{
+	font-family: Signica, sans-serif;
+	font-size: 24px;
+	font-weight: 100;
+	margin-bottom: 0;
+}
+
+.columnBlock .substring{
+	color: #9EA7B4;
+	font-size: 17px;
+	margin-left: 4px;
+}
+
+.columnBlock h2{
+	color: #04BCA6;
+	font-size: 20px;
+	font-family: Signica, sans-serif;
+	margin-top: 4px;
+	margin-bottom: 27px;
+	font-weight: 100;	
+}
+
+.columnBlock .content2 h2{
+	margin-bottom: 13px;
+}
+
+.columnBlock ul{
+	list-style: none;
+	margin-left: 3px;
+	padding: 0;
+	margin-top: 0;	
+}
+
+.columnBlock ul span{
+	margin-left: 6px;
+	line-height: 34px;		
+}
+
+.columnBlock .blockFooter{
+	display: flex;
+	justify-content: flex-start;
+	align-items: baseline;
+	margin-top: 32px;
+}
+
+.columnBlock .blockFooter div{
+	margin-right: 56px;
+	display: flex;	
+}
+
+.columnBlock .blockFooter div img{
+	margin-right: 7px;
+}
+
+.columnBlock .blockFooter .blockButton{
+	background-color: #16C4EC;
+	height: 38px;
+	width: 215px;
+	border-style: none;
+	color: white;
+	font-size: 17px;
+	font-family: Lato, sans-serif;
+	padding: 0;	
+	border-radius: 4px;
+	margin-left: 27px;	
+}
+
+.divisor{
+	margin-left: 7px;
+}
+
+.rightColumn{
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.rightColumn .columnBlock{
+	width: 627px;
+	margin-left: 11px;
+	background-color: #DBE1E8;	
+}
+
+.columnBlock .content5{	
+	margin: 29px auto 20px 23px;	
+}
+
+.columnBlock .content6{
+	margin: 32px auto 19px 23px;	
+}
+
+.columnBlock .content7{
+	margin: 28px auto 13px 23px;
+}
+
+.columnBlock .content8{
+	margin: 31px auto 19px 23px;
+}
+
+.rightColumn .content5 .blockFooter{
+	margin-top: 30px;
+}	
+
+.rightColumn .content6 .blockFooter{
+	margin-top: 34px;
+}	
+
+
+
+hr{
+	border-top: 3px dotted #C2CAD4;	
+	width: 627px;	
+	margin-bottom: 28px;	
+}
+
+.rightColumn h1{
+	font-size: 22px;
+	margin-top: 15px;	
+}
+
+.rightColumn h2{
+	font-size: 17px;
+	margin-left: 2px;	
+}
+
+.rightColumn .substring{
+	margin-left: 12px;
+}
+
+.rightColumn ul{
+	margin: 0;
+}
+
+.rightColumn .blockFooter{
+	font-size: 12px;
+	margin-top: 17px;
+	font-size: 12px;
+}
+
+.rightColumn h2{
+	margin-bottom: 0;
+}
+
+.statsBlock{
+	background-color: white;
+	width: 627px;
+	margin-left: 11px;
+	border-radius: 4px;
+}
+
+.hobbies{
+	display: flex;
+	justify-content: space-between;	
+	margin: 18px 20px 27px;
+}
+
+.hobbie{
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;	
+}
+
+.hobbie span{
+	margin: 0;
+	margin-top: 11px;
+	font-family: Lato, sans-serif;
+	font-size: 12px;
+}
+
+.progressbars{
+	display: flex;
+	justify-content: flex-start;	
+	padding: 8px 11px;
+}
+
+.progressbar{
+	margin-bottom: 9px;
+}
+
+.pbLeft{
+	display: flex;
+	flex-direction: column;
+	margin-right: 28px;
+}
+
+.pbRight{
+	display: flex;
+	flex-direction: column;
+}
+
+.progressbarDescription{
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;	
+	font-family: Lato, sans-serif;
+}
+
+.progressbarDescription span{
+	letter-spacing: -0.5px;
+	margin: 0;
+}
+
+.photoshop .cloud{
+	margin-left: 102px;
+}
+
+.illustrator .cloud{
+	margin-left: 42px;
+}
+
+.wordpress .cloud{
+	margin-left: 136px;
+}
+
+.prestashop .cloud{
+	margin-left: 114px;
+}
+
+.naturelle .cloud{
+	margin-left: -16px;
+}
+
+.sociaux .cloud{
+	margin-left: 57px;
+}
+
+.UI .cloud{
+	margin-left: 56px;
+}
+
+.UX .cloud{
+	margin-left: 38px;
+}
+
+.cloud span{
+	position: relative;	
+	left: 31px;
+	top: -9px;	
+	color: white;
+	font-size: 10px;	
+}
+
+progress{
+	height: 30px;
+	width: 270px;
+	margin-top: -9px;
+} 
+
+.footer{
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	margin: 40px 550px 0 370px;
+	font-family: Lato, sans-serif;
+	font-style: italic;
+	font-size: 18px;
 }
