@@ -45,8 +45,7 @@ function init() {
 
 resources.load([
     'img/sprites.png',
-    'img/terrain.png'
-    
+    'img/terrain.png'    
 ]);
 resources.onReady(init);
 
@@ -54,6 +53,32 @@ resources.onReady(init);
 var player = {
     pos: [0, 0],
     sprite: new Sprite('img/sprites.png', [0, 0], [39, 39], 16, [0, 1])
+};
+
+var megaliths = [];
+var qnty = getRandomInt(3, 6);
+
+for (var i = 0; i < qnty; i++) {
+
+    var j = 0;
+
+    if(Math.random() > 0.5){
+        j = 210;
+    }
+    else{
+        j = 270;
+    }
+    megaliths.push ({
+        pos: [Math.random() * (canvas.width - 60),
+              Math.random() * (canvas.height - 60)],
+        sprite: new Sprite('img/sprites.png', [0, j], [60, 60])
+    });
+};
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
 };
 
 var bullets = [];
@@ -178,6 +203,11 @@ function updateEntities(dt) {
             i--;
         }
     }
+
+    //Update megaliths
+    for(var i=0; i < megaliths.length; i++){
+        megaliths[i].sprite.update(dt);
+    }
 }
 
 // Collisions
@@ -268,6 +298,7 @@ function render() {
     renderEntities(bullets);
     renderEntities(enemies);
     renderEntities(explosions);
+    renderEntities(megaliths);
 };
 
 function renderEntities(list) {
