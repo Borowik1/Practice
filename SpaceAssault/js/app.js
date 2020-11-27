@@ -56,24 +56,8 @@ var player = {
 };
 
 var megaliths = [];
-var qnty = getRandomInt(3, 6);
-
-for (var i = 0; i < qnty; i++) {
-
-    var j = 0;
-
-    if(Math.random() > 0.5){
-        j = 210;
-    }
-    else{
-        j = 270;
-    }
-    megaliths.push ({
-        pos: [Math.random() * (canvas.width - 60),
-              Math.random() * (canvas.height - 60)],
-        sprite: new Sprite('img/sprites.png', [0, j], [60, 60])
-    });
-};
+var mannas = [];
+var mannasExplode=[];
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -91,7 +75,9 @@ var isGameOver;
 var terrainPattern;
 
 var score = 0;
+var manna = 0;
 var scoreEl = document.getElementById('score');
+var mannaEl = document.getElementById('manna');
 
 // Speed in pixels per second
 var playerSpeed = 200;
@@ -119,6 +105,7 @@ function update(dt) {
     checkCollisions();
 
     scoreEl.innerHTML = score;
+    mannaEl.innerHTML = manna;
 };
 
 function handleInput(dt) {
@@ -175,6 +162,7 @@ function handleInput(dt) {
 }
 
 function updateEntities(dt) {
+
     // Update the player sprite animation
     player.sprite.update(dt);
 
@@ -201,11 +189,8 @@ function updateEntities(dt) {
     for(var i=0; i<enemies.length; i++) {
 
         //Enemy bypasses the obstacle
-      
-
         if(checkMegalithsCollisions(enemies[i].pos, enemies[i].sprite.size)){
-
-             coord = 1;            
+            coord = 1;            
         }
         else{
             coord = 0;                
@@ -236,10 +221,25 @@ function updateEntities(dt) {
     for(var i=0; i < megaliths.length; i++){
         megaliths[i].sprite.update(dt);
     }
+
+    //Update mannas
+    for(var i=0; i < mannas.length; i++){
+        mannas[i].sprite.update(dt);        
+    }
+    
+    //Update mannas exlosions
+    for(var i=0; i<mannasExplode.length; i++){
+        mannasExplode[i].sprite.update(dt);
+            
+        // Remove if animation is done
+        if(mannasExplode[i].sprite.done){
+            mannasExplode.splice(i, 1);
+            i--;
+        }
+    }
 }
 
 // Collisions
-
 function collides(x, y, r, b, x2, y2, r2, b2) {
     return !(r <= x2 || x > r2 ||
              b <= y2 || y > b2);
@@ -305,21 +305,33 @@ function checkCollisions() {
     }
 
     //Check megaliths and bullets collision
-    for(var i=0; i<megaliths.length; i++) {
-        var pos = megaliths[i].pos;
-        var size = megaliths[i].sprite.size;
-
-        for(var j=0; j<bullets.length; j++) {
-            var pos2 = bullets[j].pos;
-            var size2 = bullets[j].sprite.size;
+    for(var j=0; j<bullets.length; j++) {
+        var pos2 = bullets[j].pos;
+        var size2 = bullets[j].sprite.size;
             
-            if(boxCollides(pos, size, pos2, size2)) {
-                // Remove the bullet and stop this iteration
-                bullets.splice(j, 1);
-                break;
-            }
+        if(checkMegalithsCollisions (pos2, size2)) {
+
+            // Remove the bullet and stop this iteration
+            bullets.splice(j, 1);
+            break;
         }
-    }            
+    }
+        
+    //Check mannas and player collision    
+    for(var i=0; i < mannas.length; i++){
+        var pos = mannas[i].pos;
+        var size = mannas[i].sprite.size;
+
+        if(boxCollides(pos, size, player.pos, player.sprite.size)){
+            mannasExplode.push({pos: pos, sprite: new Sprite('img/sprites.png', 
+            [0, 160], [57, 50], 6, [0, 1, 2, 3], null, true)})
+            mannas.splice(i, 1);
+            i--;
+
+            manna +=100;
+        }
+    }
+    
 }
 
 function checkPlayerBounds() {
@@ -353,6 +365,8 @@ function render() {
     renderEntities(enemies);
     renderEntities(explosions);
     renderEntities(megaliths);
+    renderEntities(mannas);
+    renderEntities(mannasExplode);
 };
 
 function renderEntities(list) {
@@ -382,9 +396,55 @@ function reset() {
     isGameOver = false;
     gameTime = 0;
     score = 0;
+    manna = 0;
 
     enemies = [];
     bullets = [];
+    mannas = [];
+    mannasExplode = [];
 
     player.pos = [50, canvas.height / 2];
+
+    var qnty = getRandomInt(3, 6);
+
+    for (var i = 0; i < qnty; i++) {
+        var x = Math.random() * (canvas.width - 60);
+        var y = Math.random() * (canvas.height - 60);
+
+        var j = 0;
+        if(Math.random() > 0.5){
+            j = 210;
+        }
+        else{
+            j = 270;
+        }
+        if(!boxCollides(player.pos, player.sprite.size , [x, y], [60, 60])){
+            megaliths.push({
+                pos: [x, y],
+                sprite: new Sprite('img/sprites.png', [0, j], [60, 60])
+            });
+        }else{
+            i--;
+        }        
+    };
+
+    qnty = getRandomInt(3, 9);
+
+    for (var i = 0; i < qnty; i++) {
+        var x = Math.random() * (canvas.width - 60);
+        var y = Math.random() * (canvas.height - 60);
+        
+        if(!checkMegalithsCollisions([x, y], [57, 50])){
+            if (!boxCollides([x, y], [57, 50], player.pos, player.sprite.size))
+            {
+                mannas.push ({pos: [x, y],
+                    sprite: new Sprite('img/sprites.png', 
+                    [0, 160], [57, 50], 6, [0, 1])})
+            } else {
+                i--;
+            }
+        } else {
+            i--;
+        }    
+    };    
 };
