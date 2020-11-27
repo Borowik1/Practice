@@ -183,7 +183,21 @@ function updateEntities(dt) {
 
     // Update all the enemies
     for(var i=0; i<enemies.length; i++) {
-        enemies[i].pos[0] -= enemySpeed * dt;
+
+        //Enemy bypasses the obstacle
+        for(var j=0; j < megaliths.length; j++){
+
+            if(boxCollides(enemies[i].pos, enemies[i].sprite.size,
+                 megaliths[j].pos, megaliths[j].sprite.size)){
+
+                coord = 1;
+                break;
+            }
+            else{
+                coord = 0;                
+            }
+        }
+        enemies[i].pos[coord] -= enemySpeed * dt;
         enemies[i].sprite.update(dt);
 
         // Remove if offscreen
@@ -225,6 +239,7 @@ function boxCollides(pos, size, pos2, size2) {
 }
 
 function checkCollisions() {
+
     checkPlayerBounds();
     
     // Run collision detection for all enemies and bullets
@@ -266,6 +281,23 @@ function checkCollisions() {
             gameOver();
         }
     }
+
+    //Check megaliths and bullets collision
+    for(var i=0; i<megaliths.length; i++) {
+        var pos = megaliths[i].pos;
+        var size = megaliths[i].sprite.size;
+
+        for(var j=0; j<bullets.length; j++) {
+            var pos2 = bullets[j].pos;
+            var size2 = bullets[j].sprite.size;
+            
+            if(boxCollides(pos, size, pos2, size2)) {
+                // Remove the bullet and stop this iteration
+                bullets.splice(j, 1);
+                break;
+            }
+        }
+    }            
 }
 
 function checkPlayerBounds() {
