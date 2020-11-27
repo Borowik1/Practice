@@ -123,19 +123,35 @@ function update(dt) {
 
 function handleInput(dt) {
     if(input.isDown('DOWN') || input.isDown('s')) {
-        player.pos[1] += playerSpeed * dt;
+        if(!checkMegalithsCollisions(player.pos, player.sprite.size)){
+            player.pos[1] += playerSpeed * dt;
+        }else{
+            player.pos[1] -= playerSpeed * 2 * dt;
+        }
     }
 
     if(input.isDown('UP') || input.isDown('w')) {
-        player.pos[1] -= playerSpeed * dt;
+        if(!checkMegalithsCollisions(player.pos, player.sprite.size)){
+            player.pos[1] -= playerSpeed * dt;
+        }else{
+            player.pos[1] += playerSpeed * 2 * dt;
+        }
     }
 
     if(input.isDown('LEFT') || input.isDown('a')) {
-        player.pos[0] -= playerSpeed * dt;
+        if(!checkMegalithsCollisions(player.pos, player.sprite.size)){
+            player.pos[0] -= playerSpeed * dt;
+        }else{
+            player.pos[0] += playerSpeed * 2 * dt;
+        }
     }
 
     if(input.isDown('RIGHT') || input.isDown('d')) {
-        player.pos[0] += playerSpeed * dt;
+        if(!checkMegalithsCollisions(player.pos, player.sprite.size)){
+            player.pos[0] += playerSpeed * dt;
+        }else{
+            player.pos[0] -= playerSpeed * 2 * dt;
+        }        
     }
 
     if(input.isDown('SPACE') &&
@@ -185,18 +201,16 @@ function updateEntities(dt) {
     for(var i=0; i<enemies.length; i++) {
 
         //Enemy bypasses the obstacle
-        for(var j=0; j < megaliths.length; j++){
+      
 
-            if(boxCollides(enemies[i].pos, enemies[i].sprite.size,
-                 megaliths[j].pos, megaliths[j].sprite.size)){
+        if(checkMegalithsCollisions(enemies[i].pos, enemies[i].sprite.size)){
 
-                coord = 1;
-                break;
-            }
-            else{
-                coord = 0;                
-            }
+             coord = 1;            
         }
+        else{
+            coord = 0;                
+        }
+        
         enemies[i].pos[coord] -= enemySpeed * dt;
         enemies[i].sprite.update(dt);
 
@@ -236,6 +250,14 @@ function boxCollides(pos, size, pos2, size2) {
                     pos[0] + size[0], pos[1] + size[1],
                     pos2[0], pos2[1],
                     pos2[0] + size2[0], pos2[1] + size2[1]);
+}
+
+function checkMegalithsCollisions(pos, size){
+    for(var i=0; i<megaliths.length; i++){
+        if(boxCollides(pos, size, megaliths[i].pos, megaliths[i].sprite.size)){
+            return true;            
+        }
+    }
 }
 
 function checkCollisions() {
