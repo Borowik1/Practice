@@ -46,6 +46,7 @@ function init() {
 resources.load([
     'img/sprites.png',
     'img/terrain.png'
+    
 ]);
 resources.onReady(init);
 
