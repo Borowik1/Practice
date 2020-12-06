@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Tanks
 {
-    class GameObject
+    public class GameObject
     {
         private Bitmap img;
         private Point pt;

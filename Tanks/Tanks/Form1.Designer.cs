@@ -44,6 +44,9 @@ namespace Tanks
             this.imageList1.Images.SetKeyName(0, "player_right_1.png");
             this.imageList1.Images.SetKeyName(1, "player_up_1.png");
             this.imageList1.Images.SetKeyName(2, "wall_brick.png");
+            this.imageList1.Images.SetKeyName(3, "kolobok.png");
+            this.imageList1.Images.SetKeyName(4, "bullet.png");
+            this.imageList1.Images.SetKeyName(5, "Apple.png");
             // 
             // timer1
             // 
@@ -53,9 +56,9 @@ namespace Tanks
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Black;
-            this.pictureBox1.Location = new System.Drawing.Point(75, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(72, 12);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(547, 547);
+            this.pictureBox1.Size = new System.Drawing.Size(300, 337);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -63,7 +66,7 @@ namespace Tanks
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(634, 611);
+            this.ClientSize = new System.Drawing.Size(384, 361);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -72,6 +75,8 @@ namespace Tanks
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tanks
 {
-    enum Direction
+    public enum Direction
     {
         LEFT = 0,        
         UP = 1,
