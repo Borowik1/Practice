@@ -13,5 +13,20 @@ namespace Tanks
         {
 
         }
+
+        public static List<Apple> RemoveHited(List<Apple> gameObjects)
+        {
+            for (int i = 0; i < gameObjects.Count; i++)
+            {
+                if (gameObjects[i].IsHit)
+                {
+                    gameObjects.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            return gameObjects;
+        }
+
     }
 }

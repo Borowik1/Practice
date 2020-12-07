@@ -12,9 +12,10 @@ C:\Users\LAdmin\Documents\Practice\Tanks\Tanks\bin\Debug\Tanks.exe.config
 C:\Users\LAdmin\Documents\Practice\Tanks\Tanks\bin\Debug\Tanks.exe
 C:\Users\LAdmin\Documents\Practice\Tanks\Tanks\bin\Debug\Tanks.pdb
 C:\Users\LAdmin\Documents\Practice\Tanks\Tanks\obj\Debug\Tanks.csprojAssemblyReference.cache
-C:\Users\LAdmin\Documents\Practice\Tanks\Tanks\obj\Debug\Tanks.Form1.resources
 C:\Users\LAdmin\Documents\Practice\Tanks\Tanks\obj\Debug\Tanks.Properties.Resources.resources
 C:\Users\LAdmin\Documents\Practice\Tanks\Tanks\obj\Debug\Tanks.csproj.GenerateResource.cache
 C:\Users\LAdmin\Documents\Practice\Tanks\Tanks\obj\Debug\Tanks.csproj.CoreCompileInputs.cache
 C:\Users\LAdmin\Documents\Practice\Tanks\Tanks\obj\Debug\Tanks.exe
 C:\Users\LAdmin\Documents\Practice\Tanks\Tanks\obj\Debug\Tanks.pdb
+C:\Users\LAdmin\Documents\Practice\Tanks\Tanks\obj\Debug\Tanks.Tanks.resources
+C:\Users\LAdmin\Documents\Practice\Tanks\Tanks\obj\Debug\Tanks.Form2.resources

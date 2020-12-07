@@ -36,7 +36,7 @@ namespace Tanks
 
 
         //Переопределить метод Move, чтобы он помечал на уничтожение пулю при соприкосновением с любым объектом
-        public override void Move(DateTime privStep, DateTime now, List<GameObject> listForCollisionCheck)
+        public void Move(DateTime privStep, DateTime now, List<GameObject> walls, List<EnemyTank> enemies, Kolobok kolobok)
         {
             int delta = this.Speed * (now - privStep).Milliseconds / 1000;
             Point nextPoint = new Point(this.Point.X, this.Point.Y);
@@ -50,33 +50,76 @@ namespace Tanks
             {
                 case Direction.LEFT:
                     nextPoint.X -= delta;
-                    if (CheckCollision(nextPoint, this.Size, this.Id, listForCollisionCheck))
+                    if (CheckCollision(nextPoint, this.Size, this.Id, walls))
                     {
-                        this.IsHit = true;                        
+                        this.IsHit = true;
+                        nextPoint.X += delta;
                     }
                     break;
 
                 case Direction.UP:
                     nextPoint.Y -= delta;
-                    if (CheckCollision(nextPoint, this.Size, this.Id, listForCollisionCheck))
+                    if (CheckCollision(nextPoint, this.Size, this.Id, walls))
                     {
-                        this.IsHit = true;                       
+                        this.IsHit = true;
+                        nextPoint.Y += delta;
                     }
                     break;
 
                 case Direction.RIGHT:
                     nextPoint.X += delta;
-                    if (CheckCollision(nextPoint, this.Size, this.Id, listForCollisionCheck))
+                    if (CheckCollision(nextPoint, this.Size, this.Id, walls))
                     {
-                        this.IsHit = true;                        
+                        this.IsHit = true;
+                        nextPoint.X -= delta;
                     }
                     break;
 
                 case Direction.DOWN:
                     nextPoint.Y += delta;
-                    if (CheckCollision(nextPoint, this.Size, this.Id, listForCollisionCheck))
+                    if (CheckCollision(nextPoint, this.Size, this.Id, walls))
                     {
-                        this.IsHit = true;                        
+                        this.IsHit = true;
+                        nextPoint.Y -= delta;
+                    }
+                    break;
+            }
+
+            switch (this.Direction)
+            {
+                case Direction.LEFT:
+                    nextPoint.X -= delta;
+                    if (CheckCollision(nextPoint, this.Size, this.Id, enemies))
+                    {
+                        this.IsHit = true;
+                        nextPoint.X += delta;
+                    }
+                    break;
+
+                case Direction.UP:
+                    nextPoint.Y -= delta;
+                    if (CheckCollision(nextPoint, this.Size, this.Id, enemies))
+                    {
+                        this.IsHit = true;
+                        nextPoint.Y += delta;
+                    }
+                    break;
+
+                case Direction.RIGHT:
+                    nextPoint.X += delta;
+                    if (CheckCollision(nextPoint, this.Size, this.Id, enemies))
+                    {
+                        this.IsHit = true;
+                        nextPoint.X -= delta;
+                    }
+                    break;
+
+                case Direction.DOWN:
+                    nextPoint.Y += delta;
+                    if (CheckCollision(nextPoint, this.Size, this.Id, enemies))
+                    {
+                        this.IsHit = true;
+                        nextPoint.Y -= delta;
                     }
                     break;
             }
@@ -94,5 +137,60 @@ namespace Tanks
                 this.Point = nextPoint;
             }
         }
+
+        public new bool CheckCollision(Point nextPoint, Size size, int id, List<GameObject> listOfObjects)
+        {
+            foreach (GameObject item in listOfObjects)
+            {
+                Rectangle rec = new Rectangle(nextPoint, size);
+                Rectangle rec2 = new Rectangle(item.Point, item.Size);
+
+                if (id != item.Id)
+                {
+                    if (rec.IntersectsWith(rec2))
+                    {
+                        item.IsHit = true;
+                        return true;
+                    }
+                        
+                }
+            }
+            return false;
+        }
+
+        public new bool CheckCollision(Point nextPoint, Size size, int id, List<EnemyTank> listOfObjects)
+        {
+            foreach (EnemyTank item in listOfObjects)
+            {
+                Rectangle rec = new Rectangle(nextPoint, size);
+                Rectangle rec2 = new Rectangle(item.Point, item.Size);
+
+                if (id != item.Id)
+                {
+                    if (rec.IntersectsWith(rec2))
+                    {
+                        item.IsHit = true;
+                        return true;
+                    }
+
+                }
+            }
+            return false;
+        }
+
+        public static List<Bullet> RemoveHited(List<Bullet> gameObjects)
+        {
+            for (int i = 0; i < gameObjects.Count; i++)
+            {
+                if (gameObjects[i].IsHit)
+                {
+                    gameObjects.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            return gameObjects;
+        }
+
     }
 }

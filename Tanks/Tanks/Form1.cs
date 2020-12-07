@@ -9,11 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace Tanks
 {
 
-    public partial class Form1 : Form
+    public partial class Tanks : Form
     {
         Kolobok kolobok;
         List<GameObject> walls;
@@ -25,6 +26,7 @@ namespace Tanks
         DateTime privStep;
         Color backgroundColor;
         List<Point> respawnPoints;
+        bool gameRun;
 
         int enemySpeed;
         int bulletSpeed;
@@ -32,7 +34,9 @@ namespace Tanks
 
         int id;
 
-        public Form1()
+        Form2 form2;
+
+        public Tanks()
         {
             InitializeComponent();
             g = this.pictureBox1.CreateGraphics();
@@ -59,31 +63,32 @@ namespace Tanks
             };
             backgroundColor = Color.Black;
             now = DateTime.Now;
-
-            timer1.Enabled = true;
         }
 
 
         private void Form1_Load(object sender, System.EventArgs e)
         {
             FillWalls();
-
-            kolobok = new Kolobok(new Bitmap(imageList1.Images[3], new Size(30, 30)), new Point(200, 290), 0, 0, pictureBox1.Size);
-
-            foreach (Point point in respawnPoints)
-            {
-                AddEnemy(point);
-            }
-
-            for (int i = 0; i < 5; i++)
-            {
-                AddApple();
-            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
 
+            apples = Apple.RemoveHited(apples);
+            bullets = Bullet.RemoveHited(bullets);
+            enemies = EnemyTank.RemoveHited(enemies);
+            walls = GameObject.RemoveHited(walls);
+
+            if (kolobok.IsHit)
+            {
+                StopGame();
+                return;
+            }
+
+            while (apples.Count < 5)
+            {
+                AddApple();
+            }
 
             List<GameObject> dump = new List<GameObject>();
 
@@ -102,6 +107,9 @@ namespace Tanks
             g.Clear(backgroundColor);
 
             kolobok.Move(privStep, now, dump);
+            kolobok.RemoveApples(apples);
+            kolobok.CheckTankCollision(enemies);
+            kolobok.CheckBulletCollision(bullets);
             kolobok.Draw(this);
 
             foreach (GameObject obj in walls)
@@ -117,14 +125,19 @@ namespace Tanks
             foreach (EnemyTank obj in enemies)
             {
                 obj.Move(privStep, now, dump);
+                obj.CheckKolobok(kolobok, this);
                 obj.Draw(this);
             }
 
             foreach (Bullet obj in bullets)
             {
-                obj.Move(privStep, now, dump);
+                obj.Move(privStep, now, walls, enemies, kolobok);
                 obj.Draw(this);
             }
+
+            this.label2.Text = kolobok.Score.ToString();
+
+            if (form2 != null) form2.UpdateData(apples, enemies, kolobok);
         }
 
         public void AddBullet(Point point, Direction direction)
@@ -144,7 +157,7 @@ namespace Tanks
         }
 
         public void AddApple()
-        {            
+        {
             int id = GetId();
             Bitmap appleImg = new Bitmap(imageList1.Images[5], new Size(30, 30));
             Random random = new Random();
@@ -161,28 +174,8 @@ namespace Tanks
 
             } while (colWalls || colApples);
 
-            apples.Add(new Apple(appleImg, point, id));           
+            apples.Add(new Apple(appleImg, point, id));
         }
-
-        public void RemoveHited(List<GameObject> gameObjects)
-        {
-
-        }
-
-        public void RemoveHited(List<EnemyTank> gameObjects)
-        {
-
-        }
-
-        public void RemoveById(int id)
-        {
-
-        }
-
-        //public List<GameObject> LeadToBasicClass()
-        //{
-
-        //}
 
         public int GetId()
         {
@@ -190,36 +183,54 @@ namespace Tanks
             return id;
         }
 
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        public void StopGame()
         {
-            switch (e.KeyData)
+            gameRun = false;
+            timer1.Enabled = false;
+            apples.Clear();
+            enemies.Clear();
+            bullets.Clear();
+            kolobok = null;
+            g.Clear(backgroundColor);
+            if (form2 != null)
+                form2.Clear();
+            this.label2.Text = "0";
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (!gameRun) return true;
+
+            switch (keyData)
             {
                 case Keys.Left:
                     kolobok.Speed = kolobokSpeed;
                     kolobok.ChangeDir(Direction.LEFT);
                     break;
-                case Keys.Up:
-                    kolobok.Speed = kolobokSpeed;
-                    kolobok.ChangeDir(Direction.UP);
-                    break;
                 case Keys.Right:
                     kolobok.Speed = kolobokSpeed;
                     kolobok.ChangeDir(Direction.RIGHT);
+                    break;
+                case Keys.Up:
+                    kolobok.Speed = kolobokSpeed;
+                    kolobok.ChangeDir(Direction.UP);
                     break;
                 case Keys.Down:
                     kolobok.Speed = kolobokSpeed;
                     kolobok.ChangeDir(Direction.DOWN);
                     break;
+                case Keys.Space:
+                    kolobok.Fire(this);
+                    break;
+                default: return base.ProcessCmdKey(ref msg, keyData);
             }
-
-            if (e.KeyData == Keys.Space)
-            {
-                kolobok.Fire(this);
-            }
+            return true;
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
+            if (!gameRun) return;
+
             switch (e.KeyData)
             {
                 case Keys.Left:
@@ -270,6 +281,40 @@ namespace Tanks
                 new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(224, 192),GetId())
             };
 
+        }
+
+        private void buttonStart_Click(object sender, EventArgs e)
+        {
+
+            kolobok = new Kolobok(new Bitmap(imageList1.Images[3], new Size(30, 30)), new Point(200, 290), 0, 0, pictureBox1.Size);
+
+            foreach (Point point in respawnPoints)
+            {
+                AddEnemy(point);
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+                AddApple();
+            }
+
+            gameRun = true;
+            timer1.Enabled = true;
+
+        }
+
+        private void buttonStop_Click(object sender, EventArgs e)
+        {
+            StopGame();
+        }
+
+        private void buttonInfo_Click(object sender, EventArgs e)
+        {
+            if (form2 == null)
+            {
+                form2 = new Form2(apples, enemies, kolobok);
+                form2.Visible = true;
+            }
         }
     }
 }

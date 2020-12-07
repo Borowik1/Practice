@@ -11,6 +11,8 @@ namespace Tanks
     {
         public Size gameField;
 
+        int timeTillFire = 100;
+
         public int Speed { get; set; }
 
         public Direction Direction { get; set; }
@@ -111,6 +113,26 @@ namespace Tanks
             return false;
         }
 
+        internal void CheckKolobok(Kolobok kolobok, Tanks form1)
+        {
+            Rectangle rec = new Rectangle(this.Point, this.Size);
+            Rectangle rec2 = new Rectangle(kolobok.Point, kolobok.Size);
+
+            rec2.Inflate(60, 60);
+
+
+            if (rec.IntersectsWith(rec2) && timeTillFire < 1)
+            { 
+                this.Fire(form1);
+                timeTillFire = 100;
+            }
+            else
+            {
+                timeTillFire--;
+            }
+            
+        }
+
         public static bool CheckCollision(Point nextPoint, Size size, int id, List<EnemyTank> listOfObjects)
         {
             List<GameObject> gameObjects = new List<GameObject>();
@@ -131,6 +153,19 @@ namespace Tanks
             return CheckCollision(nextPoint, size, id, gameObjects);
         }
 
+        public static List<EnemyTank> RemoveHited(List<EnemyTank> gameObjects)
+        {
+            for (int i = 0; i < gameObjects.Count; i++)
+            {
+                if (gameObjects[i].IsHit)
+                {
+                    gameObjects.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            return gameObjects;
+        }
 
         public void ChangeDir()
         {
@@ -153,7 +188,7 @@ namespace Tanks
             }
         }
 
-        public void Fire(Form1 form)
+        public void Fire(Tanks form)
         {
             int x = 0;
             int y = 0;
@@ -175,11 +210,11 @@ namespace Tanks
                 case Direction.DOWN:
                     x = this.Point.X + 8;
                     y = this.Point.Y + this.Size.Height;
-                    break;                
+                    break;
             }
 
             Point bulletPoint = new Point(x, y);
-            
+
             form.AddBullet(bulletPoint, this.Direction);
             //throw new NotImplementedException();
         }

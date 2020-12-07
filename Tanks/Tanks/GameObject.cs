@@ -35,9 +35,23 @@ namespace Tanks
             isHit = false;
         }
 
-        public void Draw(Form1 form)
+        public void Draw(Tanks form)
         {
             form.g.DrawImage(img, pt);
+        }
+
+        public static List<GameObject> RemoveHited(List<GameObject> gameObjects)
+        {
+            for (int i = 0; i < gameObjects.Count; i++)
+            {
+                if (gameObjects[i].IsHit)
+                {
+                    gameObjects.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            return gameObjects;
         }
 
         public override string ToString()
