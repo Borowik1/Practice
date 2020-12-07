@@ -89,8 +89,7 @@ namespace Tanks
             if (objectRect.IntersectsWith(modifiedGameField))
             {
                 this.Point = nextPoint;
-            }
-            
+            }            
         }
 
         internal void CheckBulletCollision(List<Bullet> bullets)
