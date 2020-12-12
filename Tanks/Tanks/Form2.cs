@@ -23,8 +23,7 @@ namespace Tanks
             this.apples = apples;
             this.enemies = enemies;
             this.kolobok = kolobok;
-            UpdateData(apples, enemies, kolobok);
-            
+            UpdateData(apples, enemies, kolobok);            
         }
 
 

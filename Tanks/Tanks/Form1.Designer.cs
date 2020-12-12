@@ -52,6 +52,8 @@ namespace Tanks
             this.imageList1.Images.SetKeyName(3, "kolobok.png");
             this.imageList1.Images.SetKeyName(4, "bullet.png");
             this.imageList1.Images.SetKeyName(5, "Apple.png");
+            this.imageList1.Images.SetKeyName(6, "water.png");
+            this.imageList1.Images.SetKeyName(7, "explosion.png");
             // 
             // timer1
             // 

@@ -87,6 +87,21 @@ namespace Tanks
             }
         }
 
+        internal static List<EnemyTank> AddExplosion(List<EnemyTank> enemies, Tanks form)
+        {
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                if (enemies[i].IsHit)
+                {
+                    form.AddExplosion(enemies[i].Point);
+                    enemies.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            return enemies;
+        }
+
         public void Move(DateTime privStep, DateTime now, List<EnemyTank> listForCollisionCheck)
         {
             List<GameObject> gameObjects = new List<GameObject>();
@@ -122,7 +137,7 @@ namespace Tanks
 
 
             if (rec.IntersectsWith(rec2) && timeTillFire < 1)
-            { 
+            {
                 this.Fire(form1);
                 timeTillFire = 100;
             }
@@ -130,7 +145,7 @@ namespace Tanks
             {
                 timeTillFire--;
             }
-            
+
         }
 
         public static bool CheckCollision(Point nextPoint, Size size, int id, List<EnemyTank> listOfObjects)
@@ -196,27 +211,26 @@ namespace Tanks
             switch (this.Direction)
             {
                 case Direction.LEFT:
-                    x = this.Point.X - 14;
+                    x = this.Point.X - 16;
                     y = this.Point.Y + 8;
                     break;
                 case Direction.UP:
                     x = this.Point.X + 8;
-                    y = this.Point.Y - 14;
+                    y = this.Point.Y - 16;
                     break;
                 case Direction.RIGHT:
-                    x = this.Point.X + this.Size.Width;
+                    x = this.Point.X + this.Size.Width + 2;
                     y = this.Point.Y + 8;
                     break;
                 case Direction.DOWN:
                     x = this.Point.X + 8;
-                    y = this.Point.Y + this.Size.Height;
+                    y = this.Point.Y + this.Size.Height + 2;
                     break;
             }
 
             Point bulletPoint = new Point(x, y);
 
             form.AddBullet(bulletPoint, this.Direction);
-            //throw new NotImplementedException();
         }
     }
 }

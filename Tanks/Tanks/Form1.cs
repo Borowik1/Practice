@@ -10,14 +10,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.IO;
+using static System.Windows.Forms.ImageList;
 
 namespace Tanks
 {
 
     public partial class Tanks : Form
     {
+        Bitmap bp;
         Kolobok kolobok;
         List<GameObject> walls;
+        List<GameObject> water;
+        List<GameObject> explosions;
         List<Apple> apples;
         List<EnemyTank> enemies;
         List<Bullet> bullets;
@@ -27,7 +32,6 @@ namespace Tanks
         Color backgroundColor;
         List<Point> respawnPoints;
         bool gameRun;
-
         int enemySpeed;
         int bulletSpeed;
         int kolobokSpeed;
@@ -36,13 +40,13 @@ namespace Tanks
 
         Form2 form2;
 
+        public Bitmap Bitmap { get { return bp; } set { bp = value; } }
+
         public Tanks()
         {
             InitializeComponent();
-            g = this.pictureBox1.CreateGraphics();
-            g.SmoothingMode = SmoothingMode.HighSpeed;
-            g.CompositingQuality = CompositingQuality.HighSpeed;
-            g.InterpolationMode = InterpolationMode.NearestNeighbor;
+            bp = new Bitmap(imageList1.Images[0], pictureBox1.Width, pictureBox1.Height);
+            g = Graphics.FromImage(bp);
 
             enemySpeed = 50;
             bulletSpeed = 100;
@@ -53,6 +57,7 @@ namespace Tanks
             apples = new List<Apple>();
             enemies = new List<EnemyTank>();
             bullets = new List<Bullet>();
+            explosions = new List<GameObject>();
             respawnPoints = new List<Point>
             {
                 new Point(1, 1),
@@ -66,6 +71,8 @@ namespace Tanks
         }
 
 
+        public ImageCollection Images { get { return imageList1.Images; } }
+
         private void Form1_Load(object sender, System.EventArgs e)
         {
             FillWalls();
@@ -73,11 +80,11 @@ namespace Tanks
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-
             apples = Apple.RemoveHited(apples);
             bullets = Bullet.RemoveHited(bullets);
-            enemies = EnemyTank.RemoveHited(enemies);
-            walls = GameObject.RemoveHited(walls);
+            enemies = EnemyTank.AddExplosion(enemies, this);
+            walls = GameObject.AddExplosion(walls, this);
+            explosions = GameObject.RemoveHited(explosions, this);
 
             if (kolobok.IsHit)
             {
@@ -97,6 +104,11 @@ namespace Tanks
                 dump.Add(item);
             }
 
+            foreach (GameObject item in water)
+            {
+                dump.Add(item);
+            }
+
             foreach (EnemyTank item in enemies)
             {
                 dump.Add(item);
@@ -105,6 +117,8 @@ namespace Tanks
             privStep = now;
             now = DateTime.Now;
             g.Clear(backgroundColor);
+
+            pictureBox1.Image = bp;
 
             kolobok.Move(privStep, now, dump);
             kolobok.RemoveApples(apples);
@@ -117,7 +131,17 @@ namespace Tanks
                 obj.Draw(this);
             }
 
+            foreach (GameObject obj in water)
+            {
+                obj.Draw(this);
+            }
+
             foreach (Apple obj in apples)
+            {
+                obj.Draw(this);
+            }
+
+            foreach (Explosion obj in explosions)
             {
                 obj.Draw(this);
             }
@@ -153,7 +177,6 @@ namespace Tanks
         {
             Bitmap enemyImg = new Bitmap(imageList1.Images[0], new Size(30, 30));
             this.enemies.Add(new EnemyTank(enemyImg, point, GetId(), enemySpeed, pictureBox1.Size));
-
         }
 
         public void AddApple()
@@ -164,18 +187,28 @@ namespace Tanks
             Point point = new Point(0, 0);
             bool colWalls = true;
             bool colApples = true;
+            bool colWater = true;
+
             do
             {
                 point.X = random.Next(0, pictureBox1.Size.Width - appleImg.Size.Width);
                 point.Y = random.Next(0, pictureBox1.Size.Height - appleImg.Size.Height);
 
                 colWalls = EnemyTank.CheckCollision(point, appleImg.Size, id, walls);
+                colWater = EnemyTank.CheckCollision(point, appleImg.Size, id, water);
                 colApples = EnemyTank.CheckCollision(point, appleImg.Size, id, apples);
 
-            } while (colWalls || colApples);
+            } while (colWalls || colApples || colWater);
 
             apples.Add(new Apple(appleImg, point, id));
         }
+
+        internal void AddExplosion(Point point)
+        {
+            Bitmap explosionImg = new Bitmap(imageList1.Images[7], new Size(30, 30));
+            explosions.Add(new Explosion(explosionImg, point, explosionImg.Size, GetId()));
+        }
+
 
         public int GetId()
         {
@@ -250,37 +283,36 @@ namespace Tanks
 
         private void FillWalls()
         {
-            walls = new List<GameObject>
+            string line;
+            water = new List<GameObject>();
+            walls = new List<GameObject>();
+
+            using (StreamReader reader = new StreamReader("items.txt"))
             {
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(32, 32), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(32, 64), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(32, 96), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(0, 128), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(32, 160), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(32, 192), GetId()),
+                Point pt = new Point(0, 0);
+                while ((line = reader.ReadLine()) != null)
+                {
+                    pt.X = 0;
+                    foreach (char item in line)
+                    {
+                        switch (item)
+                        {
+                            case 'w':
+                                water.Add(new GameObject(new Bitmap(imageList1.Images[6], new Size(32, 32)), pt, GetId()));
+                                break;
+                            case 'b':
+                                walls.Add(new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), pt, GetId()));
+                                break;
+                            default:
+                                break;
+                        }
+                        pt.X += 32;
+                    }
+                    pt.Y += 32;
+                }
 
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(96, 32), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(96, 64), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(96, 96), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(96, 128), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(96, 160), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(96, 192), GetId()),
 
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(160, 32), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(160, 64), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(160, 96), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(160, 128),GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(160, 160),GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(160, 192),GetId()),
-
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(224, 32), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(224, 64), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(224, 96), GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(224, 128),GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(224, 160),GetId()),
-                new GameObject(new Bitmap(imageList1.Images[2], new Size(32, 32)), new Point(224, 192),GetId())
-            };
-
+            }
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
@@ -314,6 +346,10 @@ namespace Tanks
             {
                 form2 = new Form2(apples, enemies, kolobok);
                 form2.Visible = true;
+            }
+            else
+            {
+                form2.Activate();
             }
         }
     }

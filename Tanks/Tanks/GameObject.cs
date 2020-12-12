@@ -16,7 +16,7 @@ namespace Tanks
         private int id;
         private bool isHit;
 
-        public int Id { get { return id; }}
+        public int Id { get { return id; } }
 
         public Bitmap Img { get { return img; } }
 
@@ -35,12 +35,12 @@ namespace Tanks
             isHit = false;
         }
 
-        public void Draw(Tanks form)
+        public virtual void Draw(Tanks form)
         {
-            form.g.DrawImage(img, pt);
+            form.g.DrawImage(this.Img, this.Point);
         }
 
-        public static List<GameObject> RemoveHited(List<GameObject> gameObjects)
+        public static List<GameObject> RemoveHited(List<GameObject> gameObjects, Tanks form)
         {
             for (int i = 0; i < gameObjects.Count; i++)
             {
@@ -57,6 +57,21 @@ namespace Tanks
         public override string ToString()
         {
             return Id.ToString();
+        }
+
+        internal static List<GameObject> AddExplosion(List<GameObject> gameObjects, Tanks form)
+        {
+            for (int i = 0; i < gameObjects.Count; i++)
+            {
+                if (gameObjects[i].IsHit)
+                {
+                    form.AddExplosion(gameObjects[i].Point);
+                    gameObjects.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            return gameObjects;
         }
     }
 }
